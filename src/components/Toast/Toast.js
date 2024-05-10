@@ -18,18 +18,30 @@ const ICONS_BY_VARIANT = {
   error: AlertOctagon,
 };
 
-function Toast() {
+function Toast({id,variant, message, setDeletedToaster}) {
+  const getIcon=(variant)=>{
+    const tag = ICONS_BY_VARIANT[variant];
+    if(!tag){
+      throw Error("Unsupported Variant value");
+    }
+    return tag;
+  }
+  
+  const Tag = getIcon(variant);
+  
   return (
-    <div className={`${styles.toast} ${styles.notice}`}>
+  
+    <div className={`${styles.toast} ${styles[variant]}`}>
       <div className={styles.iconContainer}>
-        <Info size={24} />
+        <Tag size={24} />
       </div>
       <p className={styles.content}>
-        16 photos have been uploaded
+      <VisuallyHidden>{message}</VisuallyHidden>
+
+        {message}
       </p>
-      <button className={styles.closeButton}>
-        <X size={24} />
-        <VisuallyHidden>Dismiss message</VisuallyHidden>
+      <button className={styles.closeButton} ariaLabel="Dismiss message" ariaLive="off">
+        <X size={24} onClick={()=>setDeletedToaster(id)} />
       </button>
     </div>
   );
